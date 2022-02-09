@@ -11,18 +11,18 @@ class Display(object):
         self.relative_size = relative_size
     
     def input_check(self):
-        self.screen.fill(255,255,255)
+        self.screen.fill((255,255,255))
         self.current_input.clear()
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
-                    self.current_input = "w"
+                    self.current_input.append("w")
                 if event.key == pygame.K_DOWN:
-                    self.current_input = "s"
+                    self.current_input.append("s")
                 if event.key == pygame.K_RIGHT:
-                    self.current_input = "d"
+                    self.current_input.append("d")
                 if event.key == pygame.K_LEFT:
-                    self.current_input = "a"
+                    self.current_input.append("a")
     
     def relative_origin(self, location_x, location_y):
         return int(location_x*self.relative_size-((self.screen_size)/2)), int(location_y*self.relative_size-((self.screen_size)/2))
@@ -108,7 +108,8 @@ class Game(object):
         self.enemies.append(Enemy(-10, 10))
     
     def tick(self):
-        self.display.input_check
+        self.display.input_check()
+        print(self.display.current_input)
         for player_input in self.display.current_input:
             if player_input == "w":
                 self.player.player_y += 1
