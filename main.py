@@ -43,69 +43,74 @@ class Display(object):
         
 
 class Player(object):
-    def __init__(self):
-        self.player_x = 0
-        self.player_y = 0
+    def __init__(self, size):
+        self.x = 0
+        self.y = 0
+        self.size = size
 
 class Enemy(object):
-    def __init__(self, spawn_x, spawn_y):
-        self.enemy_x = spawn_x
-        self.enemy_y = spawn_y
+    def __init__(self, spawn_x, spawn_y, size):
+        self.x = spawn_x
+        self.y = spawn_y
+        self.size = size
 
-    def movement(self, player_x, player_y):
-        if self.enemy_x > player_x:
-            self.enemy_x -= 0.125
-        elif self.enemy_x < player_x:
-            self.enemy_x += 0.125
+    def movement(self, x, y):
+        if self.x > x:
+            self.x -= 0.125
+        elif self.x < x:
+            self.x += 0.125
         else:
             pass
-        if self.enemy_y > player_y:
-            self.enemy_y -= 0.125
-        elif self.enemy_y < player_y:
-            self.enemy_y += 0.125
+        if self.y > y:
+            self.y -= 0.125
+        elif self.y < y:
+            self.y += 0.125
         else:
             pass
 
 class Game(object):
     def __init__(self):
-        self.display = Display(1000, 50)
-        self.player = Player()
+        self.display = Display(200, 10)
+        self.player = Player(1)
         self.scroll_x = 0
         self.scroll_y = 0
         self.enemies = list()
         self.level_init()
         self.alive = True
     
+    def detect_collision(self, object_1, object_2):
+        print(object_1.x, object_1.y, object_2.x, object_2.y)
+        if object_1.x < object_2.x + object_2.size/2 and object_1.x + object_1.size/2 > object_2.x and object_1.y < object_2.y + object_2.size/2 and object_1.y + object_1.size/2 > object_2.y:
+          return True
+        else:
+          return False
+    
     def level_init(self):
-        self.enemies.append(Enemy(-10, 2))
-        self.enemies.append(Enemy(-10, 10))
-        self.enemies.append(Enemy(6, 10))
-        self.enemies.append(Enemy(1, -10))
-        self.enemies.append(Enemy(-10, 10))
+        self.enemies.append(Enemy(-10, 2, 1))
     
     def tick(self):
         self.display.input_check()
         if not self.display.pause:
             for player_input in self.display.current_input:
                 if player_input == "w":
-                    self.player.player_y += 0.25
+                    self.player.y += 0.25
                 if player_input == "a":
-                    self.player.player_x -= 0.25
+                    self.player.x -= 0.25
                 if player_input == "s":
-                    self.player.player_y -= 0.25
+                    self.player.y -= 0.25
                 if player_input == "d":
-                    self.player.player_x += 0.25
-            self.scroll_x = self.player.player_x
-            self.scroll_y = self.player.player_y
+                    self.player.x += 0.25
+            self.scroll_x = self.player.x
+            self.scroll_y = self.player.y
             for enemy in self.enemies:
-                enemy.movement(self.player.player_x, self.player.player_y)
-                if enemy.enemy_x == self.player.player_x and enemy.enemy_y == self.player.player_y:
-                    self.alive = False
+                enemy.movement(self.player.x, self.player.y)
+                if self.detect_collision(self.player, enemy):
+                  self.alive = False
                 
     def render(self):
-        self.display.spawn_entity(self.player.player_x-self.scroll_x, self.player.player_y-self.scroll_y, (0,0,0))
+        self.display.spawn_entity(self.player.x-self.scroll_x, self.player.y-self.scroll_y, (0,0,0))
         for enemy in self.enemies:
-            self.display.spawn_entity(enemy.enemy_x-self.scroll_x, enemy.enemy_y-self.scroll_y, (255,0,0))
+            self.display.spawn_entity(enemy.x-self.scroll_x, enemy.y-self.scroll_y, (255,0,0))
     
     def start(self):
         while self.alive:
