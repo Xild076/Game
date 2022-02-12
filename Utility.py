@@ -14,8 +14,8 @@ class KEY(Enum):
     RIGHT = 3,
     D = 3
 
-def collision_detection(entity_1, entity_2, relative_width, relative_length):
-    if entity_1.x < entity_2.x + entity_2.width*relative_width and entity_1.x + entity_1.width*relative_width > entity_2.x and entity_1.y < entity_2.y + entity_2.length*relative_length and entity_1.y + entity_2.length*relative_length > entity_2.y:
+def collision_detection(entity_1, entity_2):
+    if entity_1.x - entity_1.width/2 < entity_2.x + entity_2.width/2 and entity_1.x + entity_1.width/2 > entity_2.x - entity_2.width/2 and entity_1.y - entity_1.length/2 < entity_2.y + entity_2.length/2 and entity_1.y + entity_1.length/2 > entity_2.y - entity_2.length/2:
         return True
     else:
         return False

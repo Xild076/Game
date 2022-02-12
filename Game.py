@@ -6,8 +6,8 @@ from Utility import collision_detection, AITYPE
 
 class Game(object):
     def __init__(self):
-        self.display = Display(1000, 25)
-        self.player = Player(0, 0, 10, 0.05, 2, 2)
+        self.display = Display("Dum game", 1200, 50)
+        self.player = Player(0, 0, 10, 0.1, 2, 2)
         self.scroll_x = 0
         self.scroll_y = 0
         self.enemies = list()
@@ -15,10 +15,10 @@ class Game(object):
         self.alive = True
     
     def level_init(self):
-        self.enemies.append(Enemy(20, 20, 10, 0.01, 1, 1, AITYPE.MELEE))
-        self.enemies.append(Enemy(-20, -20, 10, 0.01, 1, 1, AITYPE.MELEE))
-        self.enemies.append(Enemy(20, -20, 10, 0.01, 1, 1, AITYPE.MELEE))
-        self.enemies.append(Enemy(-20, 20, 10, 0.01, 1, 1, AITYPE.MELEE))
+        self.enemies.append(Enemy(20, 20, 10, 0.03, 2, 2, AITYPE.MELEE))
+        self.enemies.append(Enemy(-20, -20, 10, 0.03, 2, 2, AITYPE.MELEE))
+        self.enemies.append(Enemy(20, -20, 10, 0.03, 2, 2, AITYPE.MELEE))
+        self.enemies.append(Enemy(-20, 20, 10, 0.03, 2, 2, AITYPE.MELEE))
     
     def tick(self):
         self.display.input_check()
@@ -29,7 +29,7 @@ class Game(object):
             self.scroll_y = self.player.y
             for enemy in self.enemies:
                 enemy.ai_movement(self.player.x, self.player.y)
-                if collision_detection(self.player, enemy, 3.625, 3.625):
+                if collision_detection(self.player, enemy):
                     #COLLISION DETECTION INCREASES PER 1.125 every time, 1 -> 2.5, 2 -> 3.625, 3 -> 5, 4 -> 6.25, 5 -> 7.365
                     self.alive = False
                 
